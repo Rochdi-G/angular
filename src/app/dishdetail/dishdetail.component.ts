@@ -18,6 +18,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 export class DishdetailComponent implements OnInit {
   
   dish : Dish;
+  dishcopy = null; 
   dishIds: number[];
   prev: number;
   next: number;
@@ -53,7 +54,7 @@ export class DishdetailComponent implements OnInit {
     this.createForm()
     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
     this.route.params.switchMap((params: Params) => this.dishservice.getDish(+params['id']))
-    .subscribe(dish => {this.dish = dish; this.setPrevNext(dish.id)},
+    .subscribe(dish => {this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id)},
       errmess => this.errMess = <any>errmess);
   }
 
@@ -71,6 +72,7 @@ export class DishdetailComponent implements OnInit {
     this.commentForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       comment: ['', Validators.required],
+      rating: 5,
     });
 
     this.commentForm.valueChanges
@@ -97,18 +99,18 @@ export class DishdetailComponent implements OnInit {
   onSubmit() {
     this.comment = this.commentForm.value;
     console.log(this.comment);
+    this.comment.date = new Date().toISOString();
+
     this.comment.author = this.commentForm.value.name;
-    this.comment.rating = this.commentForm.value.rating;
     this.commentForm.reset({
       name: '',
+      rating: 5,
       comment: '',
     });
-    let date = new Date();
-    let n = date.toISOString();
-    this.comment.date = n;
     
-    this.dish.comments.push(this.comment);
-
+    this.dishcopy.comments.push(this.comment);
+    this.dishcopy.save()
+      .subscribe();
 
   }
 }

@@ -4,7 +4,7 @@ import { FormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@angular/material';
+import { MaterialModule,} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule} from '@angular/forms';
 import 'hammerjs';
@@ -27,17 +27,20 @@ import { baseURL } from './shared/baseurl';
 import { ProcessHttpmsgService } from './services/process-httpmsg.service';
 import { RestangularModule, Restangular } from 'ngx-restangular';
 import { RestangularConfigFactory } from './shared/restConfig';
+import { HighlightDirective } from './directives/highlight.directive';
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
+    
     DishdetailComponent,
     HeaderComponent,
     FooterComponent,
     HomeComponent,
     AboutComponent,
     ContactComponent,
-    LoginComponent
+    LoginComponent,
+    HighlightDirective
   ],
   imports: [
     BrowserModule,
@@ -45,6 +48,7 @@ import { RestangularConfigFactory } from './shared/restConfig';
     FormsModule,
     HttpModule,
     MaterialModule,
+    
     FlexLayoutModule,
     AppRoutingModule,
     ReactiveFormsModule,

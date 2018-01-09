@@ -51,7 +51,7 @@
           <span [hidden]="!(formErrors.name)">{{formErrors.name}}</span>
         </md-hint>
       </md-input-container>
-      <md-slider thumbLabel tickInterval="1" min="1" max="5" step="1" value="5"></md-slider>
+      <md-slider formControlName="rating" thumbLabel tickInterval="1" min="1" max="5" step="1" value="5"></md-slider>
       <md-input-container class="full-width" dividerColor="{{formErrors.comment ?'warn':'primary'}}">
         <input mdInput formControlName="comment" placeholder="Comment" type="text" rows=12 required>
         <md-hint>
