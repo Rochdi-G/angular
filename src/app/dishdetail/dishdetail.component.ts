@@ -7,11 +7,21 @@ import { DishService } from '../services/dish.service';
 import 'rxjs/add/operator/switchMap';
 import { Comment } from '../shared/comment';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { visibility, flyInOut, expand } from '../animations/app.animation';
 
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
-  styleUrls: ['./dishdetail.component.scss']
+  styleUrls: ['./dishdetail.component.scss'],
+  host: {
+    '[@flyInOut]': 'true',
+    'style': 'display: block;'
+  },
+  animations: [
+    flyInOut(),
+    visibility(),
+    expand()
+  ]
 })
 
 
@@ -25,14 +35,15 @@ export class DishdetailComponent implements OnInit {
   comment: Comment;
   commentForm: FormGroup;
   errMess: string;
+  visibility = 'shown';
 
   formErrors = {
-    'name': '',
+    'author': '',
     'comment': '',
   };
 
   validationMessages = {
-    'name': {
+    'author': {
       'required': 'Author Name is required.',
       'minlength': 'Author Name must be 2 characters long.'
     },
@@ -53,8 +64,8 @@ export class DishdetailComponent implements OnInit {
   ngOnInit() {
     this.createForm()
     this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
-    this.route.params.switchMap((params: Params) => this.dishservice.getDish(+params['id']))
-    .subscribe(dish => {this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id)},
+    this.route.params.switchMap((params: Params) => {this.visibility = 'hidden'; return this.dishservice.getDish(+params['id']); })
+    .subscribe(dish => {this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); this.visibility = 'shown'; },
       errmess => this.errMess = <any>errmess);
   }
 
@@ -70,7 +81,7 @@ export class DishdetailComponent implements OnInit {
 
   createForm(){
     this.commentForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
+      author: ['', [Validators.required, Validators.minLength(2)]],
       comment: ['', Validators.required],
       rating: 5,
     });
@@ -101,9 +112,8 @@ export class DishdetailComponent implements OnInit {
     console.log(this.comment);
     this.comment.date = new Date().toISOString();
 
-    this.comment.author = this.commentForm.value.name;
     this.commentForm.reset({
-      name: '',
+      author: '',
       rating: 5,
       comment: '',
     });
